@@ -30,6 +30,10 @@ const router = express.Router()
 
 registerSimpleRouter()
 
+registerBaseGetRouter()
+
+registerBasePostRouter()
+
 app.use(router)
 
 const port = process.env.PORT || 8888
@@ -42,5 +46,17 @@ function registerSimpleRouter() {
     res.json({
       msg: `hello world`
     })
+  })
+}
+
+function registerBaseGetRouter() {
+  router.get('/base/get', function(req, res) {
+    res.json(req.query)
+  })
+}
+
+function registerBasePostRouter() {
+  router.post('/base/post', function(req, res) {
+    res.json(req.body)
   })
 }
