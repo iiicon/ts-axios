@@ -34,6 +34,10 @@ registerBaseGetRouter()
 
 registerBasePostRouter()
 
+registerErrorGetRouter()
+
+registerErrorTimeoutRouter()
+
 app.use(router)
 
 const port = process.env.PORT || 8888
@@ -58,5 +62,28 @@ function registerBaseGetRouter() {
 function registerBasePostRouter() {
   router.post('/base/post', function(req, res) {
     res.json(req.body)
+  })
+}
+
+function registerErrorGetRouter() {
+  router.get('/error/get', function(req, res) {
+    if (Math.random() > 0.5) {
+      res.json({
+        msg: `hello world`
+      })
+    } else {
+      res.status(500)
+      res.end()
+    }
+  })
+}
+
+function registerErrorTimeoutRouter() {
+  router.get('/error/timeout', function(req, res) {
+    setTimeout(() => {
+      res.json({
+        msg: `hello world`
+      })
+    }, 3000)
   })
 }
