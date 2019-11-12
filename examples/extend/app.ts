@@ -31,19 +31,17 @@ axios.put('/extend/put', { msg: 'put' })
 axios.patch('/extend/patch', { msg: 'patch' })
 
 // 函数重载
-setTimeout(() => {
-  axios({
-    url: '/extend/post',
-    method: 'post',
-    data: {
-      msg: 'hi c'
-    }
-  })
+axios({
+  url: '/extend/post',
+  method: 'post',
+  data: {
+    msg: 'hi c'
+  }
+})
 
-  axios('/extend/post', {
-    method: 'post',
-    data: {
-      msg: 'hi c'
-    }
-  })
-}, 1000)
+axios('/extend/post', {
+  method: 'post',
+  data: {
+    msg: 'hi c'
+  }
+})
