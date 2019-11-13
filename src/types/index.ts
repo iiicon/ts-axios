@@ -35,7 +35,7 @@ export interface AxiosResponse<T = any> {
   request: any
 }
 
-export interface AxiosPromise<T> extends Promise<AxiosResponse<T>> {
+export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {
   // 这样的话，当 axios 返回的是 AxiosPromise 类型，那么 resolve 函数中的参数就是一个 AxiosResponse 类型
   // TODO Promise
 }
@@ -68,6 +68,7 @@ export interface Axios {
 
 export interface AxiosInstance extends Axios {
   <T = any>(config: AxiosRequestConfig): AxiosPromise<T>
+
   <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
@@ -91,6 +92,15 @@ export interface ResponseData<T = any> {
 }
 
 export interface AxiosInterceptorManager<T> {
-  // use(resolved: resolvedFn<T>, rejected?: rejectedFn): number
-  // eject(id: number): void
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
+
+  eject(id: number): void
+}
+
+export interface ResolvedFn<T = any> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (error: any): any
 }
