@@ -24,6 +24,8 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+
+  [propName: string]: any
 }
 
 export interface AxiosResponse<T = any> {
@@ -49,6 +51,12 @@ export interface AxiosError extends Error {
 }
 
 export interface Axios {
+  defaults: any
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>
+    response: AxiosInterceptorManager<AxiosResponse>
+  }
+
   request<T = any>(config: AxiosRequestConfig): AxiosPromise<T> // 也就是 Promise<AxiosResponse<T>> 这样我们就能在响应中拿到 T
 
   get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>

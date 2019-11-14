@@ -40,6 +40,10 @@ registerErrorTimeoutRouter()
 
 registerExtendRouter()
 
+registerInterceptorsRoute()
+
+registerConfigRoute()
+
 app.use(router)
 
 const port = process.env.PORT || 8888
@@ -122,6 +126,32 @@ function registerExtendRouter() {
   })
 
   router.get('/extend/user', function(req, res) {
+    res.json({
+      code: 0,
+      message: 'ok',
+      result: {
+        name: 'jack',
+        age: 18
+      }
+    })
+  })
+}
+
+function registerInterceptorsRoute() {
+  router.get('/interceptor/get', function(req, res) {
+    res.json({
+      code: 0,
+      message: 'ok',
+      result: {
+        name: 'jack',
+        age: 18
+      }
+    })
+  })
+}
+
+function registerConfigRoute() {
+  router.post('/config/post', function(req, res) {
     res.json({
       code: 0,
       message: 'ok',
