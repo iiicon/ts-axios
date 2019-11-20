@@ -19,7 +19,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
     Object.keys(headers).forEach(item => {
       if (data === null && item.toLocaleLowerCase() === 'content-type') {
-        delete headers[name]
+        delete headers[item]
       } else {
         request.setRequestHeader(item, headers[item])
       }
@@ -43,6 +43,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       handleResponse(response)
     }
 
+    // tslint:disable-next-line:no-inner-declarations
     function handleResponse(response: AxiosResponse) {
       if (response.status >= 200 && response.status <= 304) {
         resolve(response)

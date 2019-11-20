@@ -1,10 +1,11 @@
 import { isPlainObject } from './util'
 
 export function transformRequest(val: any): any {
-  if (isPlainObject(val)) {
+  if (!isPlainObject(val)) {
+    return val
+  } else {
     return JSON.stringify(val)
   }
-  return val
 }
 
 export function transformResponse(data: any): any {
