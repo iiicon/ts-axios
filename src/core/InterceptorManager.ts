@@ -21,9 +21,10 @@ export default class InterceptorManager<T> {
   }
 
   eject(id: number): void {
-    if (this.interceptors[id]) {
-      this.interceptors[id] = null
+    if (!this.interceptors[id]) {
+      return
     }
+    this.interceptors[id] = null
   }
 
   forEach(fn: (interceptor: Interceptor<T>) => void): void {

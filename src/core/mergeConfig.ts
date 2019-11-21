@@ -5,7 +5,7 @@ import { isPlainObject, deepMerge } from '../helpers/util'
  * config1 默认参数
  * config2 用户传入的参数
  */
-export default function mergeConfig(config1: AxiosRequestConfig, config2: AxiosRequestConfig) {
+export default function mergeConfig(config1: AxiosRequestConfig, config2?: AxiosRequestConfig) {
   if (!config2) {
     config2 = {}
   }
@@ -48,7 +48,7 @@ export default function mergeConfig(config1: AxiosRequestConfig, config2: AxiosR
 
   function fromDeepStrat(val1: any, val2: any): any {
     if (isPlainObject(val2)) {
-      return deepMerge(val2)
+      return deepMerge(val1, val2)
     } else if (typeof val2 !== 'undefined') {
       return val2
     } else if (isPlainObject(val1)) {
@@ -60,7 +60,7 @@ export default function mergeConfig(config1: AxiosRequestConfig, config2: AxiosR
 
   function mergeField(key: string): void {
     const strat = strats[key] || defaultStrat
-    config[key] = strat(config1[key], config2[key])
+    config[key] = strat(config1[key], config2![key])
   }
 
   return config

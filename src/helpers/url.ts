@@ -27,19 +27,21 @@ export function buildURL(url: string, params: any): string {
     //   key: val:[]
     // }
     let values: string[]
-    if (Array.isArray(val)) {
+    if (!Array.isArray(val)) {
+      values = [val]
+    } else {
       values = val
       key += '[]'
-    } else {
-      values = [val]
     }
 
     // params: {
     //  date
     // }
     values.forEach(item => {
+      // tslint:disable-next-line:no-constant-condition
       if (isDate(item)) {
         item = item.toISOString()
+        // tslint:disable-next-line:no-constant-condition
       } else if (isPlainObject(item)) {
         // params: {
         //  object
