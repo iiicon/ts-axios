@@ -5,7 +5,10 @@ import { isPlainObject, deepMerge } from '../helpers/util'
  * config1 默认参数
  * config2 用户传入的参数
  */
-export default function mergeConfig(config1: AxiosRequestConfig, config2?: AxiosRequestConfig) {
+export default function mergeConfig(
+  config1: AxiosRequestConfig,
+  config2: AxiosRequestConfig
+): AxiosRequestConfig {
   if (!config2) {
     config2 = {}
   }
@@ -33,11 +36,7 @@ export default function mergeConfig(config1: AxiosRequestConfig, config2?: Axios
   }
 
   function defaultStrat(val1: any, val2: any): any {
-    if (typeof val2 !== 'undefined') {
-      return val2
-    } else {
-      return val1
-    }
+    return typeof val2 !== 'undefined' ? val2 : val1
   }
 
   function fromVal2Strat(val1: any, val2: any): any {
