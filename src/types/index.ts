@@ -122,3 +122,16 @@ export interface RejectedFn {
 export interface AxiosTransformer {
   (data: any, headers?: any): any
 }
+
+export interface CancelToken {
+  promise: Promise<string>
+  reason?: string
+}
+
+export interface Canceler {
+  (message?: string): void
+}
+
+export interface CancelExecutor {
+  (cancel: Canceler): void
+}
