@@ -70,31 +70,31 @@ export default class Axios {
   }
 
   delete(url: string, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithoutData('delete', url)
+    return this._requestMthodWithoutData('delete', url, config)
   }
 
   get(url: string, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithoutData('get', url)
+    return this._requestMthodWithoutData('get', url, config)
   }
 
   head(url: string, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithoutData('head', url)
+    return this._requestMthodWithoutData('head', url, config)
   }
 
   options(url: string, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithoutData('options', url)
+    return this._requestMthodWithoutData('options', url, config)
   }
 
   post(url: string, data: any, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithData('post', url, data)
+    return this._requestMthodWithData('post', url, data, config)
   }
 
   patch(url: string, data: any, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithData('patch', url, data)
+    return this._requestMthodWithData('patch', url, data, config)
   }
 
   put(url: string, data: any, config?: AxiosRequestConfig): AxiosPromise {
-    return this._requestMthodWithData('put', url, data)
+    return this._requestMthodWithData('put', url, data, config)
   }
 
   _requestMthodWithoutData(method: Method, url: string, config?: AxiosRequestConfig) {

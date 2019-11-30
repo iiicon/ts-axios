@@ -127,6 +127,7 @@
   },
   "dependencies": {
     "@types/qs": "^6.9.0",
+    "cookie-parser": "^1.4.4",
     "qs": "^6.9.1",
     "types": "^0.1.1"
   }
