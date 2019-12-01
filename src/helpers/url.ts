@@ -11,6 +11,19 @@ function encode(val: string): string {
     .replace(/%5D/gi, ']')
 }
 
+interface URLOrigin {
+  protocol: string
+  host: string
+}
+
+function resolveURL(url: string): URLOrigin {
+  const parseNode = document.createElement('a')
+  parseNode.href = url
+  const { protocol, host } = parseNode
+
+  return { protocol, host }
+}
+
 export function buildURL(url: string, params: any): string {
   if (!params) {
     return url
@@ -63,4 +76,11 @@ export function buildURL(url: string, params: any): string {
   }
 
   return url
+}
+
+export function isURLSameOrigin(requestURL: string): boolean {
+  const parseOrigin = resolveURL(requestURL)
+  const currentOrigin = resolveURL(window.location.href)
+
+  return parseOrigin.protocol === currentOrigin.protocol && parseOrigin.host === currentOrigin.host
 }

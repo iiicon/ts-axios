@@ -19,26 +19,49 @@ export function extend<T, U>(to: T, from: U): T & U {
   return to as T & U
 }
 
-export function deepMerge(...vals: any[]): any {
+// export function deepMerge(...vals: any[]): any {
+//   const result = Object.create(null)
+//   vals.forEach(value => {
+//     if (value) {
+//       Object.keys(value).forEach(key => {
+//         const val = value[key]
+//         if (!isPlainObject(val)) {
+//           result[key] = val
+//         } else {
+//           if (!isPlainObject(result[key])) {
+//             result[key] = deepMerge(val)
+//           } else {
+//             result[key] = deepMerge(result[key], val)
+//           }
+//         }
+//       })
+//     }
+//
+//     return result
+//   })
+// }
+
+export function deepMerge(...objs: any[]): any {
   const result = Object.create(null)
-  vals.forEach(value => {
-    if (value) {
-      Object.keys(value).forEach(key => {
-        const val = value[key]
-        if (!isPlainObject(val)) {
-          result[key] = val
-        } else {
-          if (!isPlainObject(result[key])) {
-            result[key] = deepMerge(val)
-          } else {
+
+  objs.forEach(obj => {
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        const val = obj[key]
+        if (isPlainObject(val)) {
+          if (isPlainObject(result[key])) {
             result[key] = deepMerge(result[key], val)
+          } else {
+            result[key] = deepMerge(val)
           }
+        } else {
+          result[key] = val
         }
       })
     }
-
-    return result
   })
+
+  return result
 }
 
 export function flattenHeaders(headers: any, method: Method) {
@@ -51,4 +74,8 @@ export function flattenHeaders(headers: any, method: Method) {
   })
 
   return headers
+}
+
+export function isFormData(val: any): val is FormData {
+  return typeof val !== 'undefined' && val instanceof FormData
 }

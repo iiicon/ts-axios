@@ -20,7 +20,7 @@ export default function mergeConfig(
     strats[key] = fromVal2Strat
   })
 
-  const fromDeepKeys = ['headers']
+  const fromDeepKeys = ['headers', 'auth']
   fromDeepKeys.forEach(key => {
     strats[key] = fromDeepStrat
   })

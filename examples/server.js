@@ -5,6 +5,9 @@ const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const WebpackConfig = require('./webpack.config')
 const cookieParse = require('cookie-parser')
+const multipart = require('connect-multiparty')
+const path = require('path')
+const atob = require('atob')
 
 const app = express()
 const compiler = webpack(WebpackConfig)
@@ -23,13 +26,22 @@ app.use(
 
 app.use(webpackHotMiddleware(compiler))
 
-app.use(express.static(__dirname))
+app.use(express.static(__dirname, {
+  setHeaders(res) {
+    res.cookie('XSRF-TOKEN-D', 'thisiscookie')
+  }
+}))
 
 app.use(bodyParser.json())
+
 // app.use(bodyParser.text())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use(cookieParse())
+
+app.use(multipart({
+  uploadDir: path.resolve(__dirname, 'upload-file')
+}))
 
 const router = express.Router()
 
@@ -187,8 +199,31 @@ function registerCancelRoute() {
 }
 
 function registerMoreRouter() {
-  router.get('/more/get', function(req, res) {
+
+  router.get('/more/304', function(req, res) {
+    res.status(304)
+    res.end('cache')
+  })
+
+  router.get('/more/304', function(req, res) {
     res.json(req.cookies)
   })
-}
 
+  router.post('/more/post', function(req, res) {
+    console.log(req.body, req.files)
+    res.end('upload success!')
+  })
+
+  router.post('/more/post2', function(req, res) {
+    const auth = req.headers.authorization
+    const [type, credentials] = auth.split(' ')
+    const [username, password] = atob(credentials).split(':')
+
+    if (type === 'Basic' && username === 'iiicon' && password === '123') {
+      res.json(req.body)
+    } else {
+      res.status(401)
+      res.end('UnAuthorization')
+    }
+  })
+}

@@ -1,6 +1,9 @@
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createAxiosError } from '../helpers/error'
+import { isURLSameOrigin } from '../helpers/url'
+import { cookie } from '../helpers/cookie'
+import { isFormData } from '../helpers/util'
 
 export default function xhr(config: AxiosRequestConfig): AxiosPromise {
   return new Promise((resolve, reject) => {
@@ -12,60 +15,117 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       responseType,
       timeout,
       cancelToken,
-      withCredentials
+      withCredentials,
+      xsrfHeaderName,
+      xsrfCookieName,
+      onDownloadProgress,
+      onUploadProgress,
+      auth,
+      validateStatus
     } = config
+
     const request = new XMLHttpRequest()
-
-    if (responseType) {
-      request.responseType = responseType
-    }
-
-    if (timeout) {
-      request.timeout = timeout
-    }
-
-    if (withCredentials) {
-      request.withCredentials = true
-    }
 
     request.open(method.toUpperCase(), url!, true)
 
-    Object.keys(headers).forEach(item => {
-      if (data === null && item.toLocaleLowerCase() === 'content-type') {
-        delete headers[item]
-      } else {
-        request.setRequestHeader(item, headers[item])
-      }
-    })
+    configureRequest()
 
-    if (cancelToken) {
-      cancelToken.promise.then(message => {
-        request.abort()
-        reject(message)
+    addEvents()
+
+    processHeaders()
+
+    processCancel()
+
+    function processHeaders() {
+      if (isFormData(data)) {
+        delete headers['Content-Type']
+      }
+
+      if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
+        const xsrfValue = cookie.read(xsrfCookieName)
+        if (xsrfValue && xsrfHeaderName) {
+          headers[xsrfHeaderName] = xsrfValue
+        }
+      }
+
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
+      }
+
+      Object.keys(headers).forEach(item => {
+        if (data === null && item.toLocaleLowerCase() === 'content-type') {
+          delete headers[item]
+        } else {
+          request.setRequestHeader(item, headers[item])
+        }
       })
     }
 
-    request.onreadystatechange = function handleLoad() {
-      if (request.readyState !== 4) return
-      if (request.status === 0) return // 网络错误
+    function processCancel() {
+      if (cancelToken) {
+        cancelToken.promise.then(message => {
+          request.abort()
+          reject(message)
+        })
+      }
+    }
 
-      const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-      const responseData = request.responseType === 'text' ? request.responseText : request.response
-      const response: AxiosResponse = {
-        data: responseData,
-        status: request.status,
-        statusText: request.statusText,
-        headers: responseHeaders,
-        config,
-        request
+    function addEvents() {
+      request.onreadystatechange = function handleLoad() {
+        if (request.readyState !== 4) return
+        if (request.status === 0) return // 网络错误
+
+        const responseHeaders = parseHeaders(request.getAllResponseHeaders())
+        const responseData =
+          request.responseType === 'text' ? request.responseText : request.response
+        const response: AxiosResponse = {
+          data: responseData,
+          status: request.status,
+          statusText: request.statusText,
+          headers: responseHeaders,
+          config,
+          request
+        }
+
+        handleResponse(response)
       }
 
-      handleResponse(response)
+      if (onDownloadProgress) {
+        request.onprogress = onDownloadProgress
+      }
+
+      if (onUploadProgress) {
+        request.upload.onprogress = onUploadProgress
+      }
+
+      request.ontimeout = function() {
+        reject(
+          createAxiosError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request)
+        )
+      }
+
+      request.onerror = function handleError() {
+        reject(createAxiosError('Network Error', config, null, request))
+      }
+    }
+
+    function configureRequest() {
+      if (responseType) {
+        request.responseType = responseType
+      }
+
+      if (timeout) {
+        request.timeout = timeout
+      }
+
+      if (withCredentials) {
+        request.withCredentials = true
+      }
     }
 
     // tslint:disable-next-line:no-inner-declarations
     function handleResponse(response: AxiosResponse) {
-      if (response.status >= 200 && response.status <= 304) {
+      if (!validateStatus || validateStatus(response.status)) {
         resolve(response)
       } else {
         reject(
@@ -78,14 +138,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           )
         )
       }
-    }
-
-    request.ontimeout = function() {
-      reject(createAxiosError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
-    }
-
-    request.onerror = function handleError() {
-      reject(createAxiosError('Network Error', config, null, request))
     }
 
     request.send(data)
