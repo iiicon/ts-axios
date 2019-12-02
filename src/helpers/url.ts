@@ -1,4 +1,4 @@
-import { isDate, isPlainObject } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 function encode(val: string): string {
   return encodeURIComponent(val)
@@ -24,48 +24,50 @@ function resolveURL(url: string): URLOrigin {
   return { protocol, host }
 }
 
-export function buildURL(url: string, params: any): string {
+export function buildURL(
+  url: string,
+  params: any,
+  paramsSerializer?: (params: any) => string
+): string {
   if (!params) {
     return url
   }
-  let parts: string[] = []
-  Object.keys(params).forEach(key => {
-    let val = params[key]
+  let serializedParams
 
-    if (val === null || typeof val === 'undefined') {
-      return // ?
-    }
+  if (paramsSerializer) {
+    serializedParams = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    serializedParams = params.toString()
+  } else {
+    let parts: string[] = []
+    Object.keys(params).forEach(key => {
+      let val = params[key]
 
-    // params: {
-    //   key: val:[]
-    // }
-    let values: string[]
-    if (!Array.isArray(val)) {
-      values = [val]
-    } else {
-      values = val
-      key += '[]'
-    }
-
-    // params: {
-    //  date
-    // }
-    values.forEach(item => {
-      // tslint:disable-next-line:no-constant-condition
-      if (isDate(item)) {
-        item = item.toISOString()
-        // tslint:disable-next-line:no-constant-condition
-      } else if (isPlainObject(item)) {
-        // params: {
-        //  object
-        // }
-        item = JSON.stringify(item)
+      if (val === null || typeof val === 'undefined') {
+        return // ?
       }
-      parts.push(`${encode(key)}=${encode(item)}`)
+      let values: string[]
+      if (!Array.isArray(val)) {
+        values = [val]
+      } else {
+        values = val
+        key += '[]'
+      }
+      values.forEach(item => {
+        // tslint:disable-next-line:no-constant-condition
+        if (isDate(item)) {
+          item = item.toISOString()
+          // tslint:disable-next-line:no-constant-condition
+        } else if (isPlainObject(item)) {
+          item = JSON.stringify(item)
+        }
+        parts.push(`${encode(key)}=${encode(item)}`)
+      })
     })
-  })
 
-  let serializedParams = parts.join('&')
+    serializedParams = parts.join('&')
+  }
+
   if (serializedParams) {
     // #
     const hashIndex = url.indexOf('#')

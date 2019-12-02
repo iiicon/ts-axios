@@ -19,27 +19,9 @@ export function extend<T, U>(to: T, from: U): T & U {
   return to as T & U
 }
 
-// export function deepMerge(...vals: any[]): any {
-//   const result = Object.create(null)
-//   vals.forEach(value => {
-//     if (value) {
-//       Object.keys(value).forEach(key => {
-//         const val = value[key]
-//         if (!isPlainObject(val)) {
-//           result[key] = val
-//         } else {
-//           if (!isPlainObject(result[key])) {
-//             result[key] = deepMerge(val)
-//           } else {
-//             result[key] = deepMerge(result[key], val)
-//           }
-//         }
-//       })
-//     }
-//
-//     return result
-//   })
-// }
+export function isURLSearchParams(val: any): val is URLSearchParams {
+  return typeof val !== 'undefined' && val instanceof URLSearchParams
+}
 
 export function deepMerge(...objs: any[]): any {
   const result = Object.create(null)
@@ -78,4 +60,12 @@ export function flattenHeaders(headers: any, method: Method) {
 
 export function isFormData(val: any): val is FormData {
   return typeof val !== 'undefined' && val instanceof FormData
+}
+
+export function isAbsoluteURL(url: string): boolean {
+  return /([a-z][a-z\d\+\-\.]*:)\/\//i.test(url)
+}
+
+export function combineURL(baseURL: string, relativeURL?: string): string {
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL
 }
