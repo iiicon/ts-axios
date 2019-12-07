@@ -1,12 +1,12 @@
 import { isDate, isPlainObject, isURLSearchParams } from './util'
 
-function encode(val: string): string {
+export function encode(val: string): string {
   return encodeURIComponent(val)
     .replace(/%40/g, '@')
     .replace(/%3A/gi, ':')
     .replace(/%24/g, '$')
     .replace(/%2C/gi, ',')
-    .replace(/%20/g, '+')
+    .replace(/%2B/g, '+')
     .replace(/%5B/gi, '[')
     .replace(/%5D/gi, ']')
 }
@@ -26,7 +26,7 @@ function resolveURL(url: string): URLOrigin {
 
 export function buildURL(
   url: string,
-  params: any,
+  params?: any,
   paramsSerializer?: (params: any) => string
 ): string {
   if (!params) {
