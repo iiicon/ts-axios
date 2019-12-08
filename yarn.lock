@@ -1178,6 +1178,10 @@
     "@types/istanbul-lib-coverage" "*"
     "@types/istanbul-lib-report" "*"
 
+"@types/jasmine-ajax@~3.1.39":
+  version "3.1.40"
+  resolved "https://registry.npm.taobao.org/@types/jasmine-ajax/download/@types/jasmine-ajax-3.1.40.tgz#55f390ef67a8165adbb40d864f9131325d2b027d"
+
 "@types/jest@^23.3.2":
   version "23.3.14"
   resolved "https://registry.npm.taobao.org/@types/jest/download/@types/jest-23.3.14.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fjest%2Fdownload%2F%40types%2Fjest-23.3.14.tgz#37daaf78069e7948520474c87b80092ea912520a"
@@ -4857,6 +4861,14 @@ istanbul-reports@^2.2.6:
   resolved "https://registry.npm.taobao.org/istanbul-reports/download/istanbul-reports-2.2.6.tgz#7b4f2660d82b29303a8fe6091f8ca4bf058da1af"
   dependencies:
     handlebars "^4.1.2"
+
+jasmine-ajax@~4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npm.taobao.org/jasmine-ajax/download/jasmine-ajax-4.0.0.tgz#7d8ba7e47e3f7e780e155fe9aa563faafa7e1a26"
+
+jasmine-core@~3.4.0:
+  version "3.4.0"
+  resolved "https://registry.npm.taobao.org/jasmine-core/download/jasmine-core-3.4.0.tgz#2a74618e966026530c3518f03e9f845d26473ce3"
 
 java-properties@^1.0.0:
   version "1.0.2"
