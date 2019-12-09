@@ -70,9 +70,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
           })
           .catch(
             /* istanbul ignore next */
-            () => {
-              // do nothing
-            }
+            () => ({
+              /* do nothing */
+            })
           )
       }
     }
