@@ -1,6 +1,4 @@
-import { isDate, isObject } from './util'
-import { useAsPath } from 'tslint/lib/configuration'
-import { type } from 'os'
+import { isDate, isPlainObject } from './util'
 
 export function buildURL(url: string, params?: any) {
   if (!params) return url
@@ -23,7 +21,7 @@ export function buildURL(url: string, params?: any) {
     values.forEach(value => {
       if (isDate(value)) {
         value = value.toISOString()
-      } else if (isObject(value)) {
+      } else if (isPlainObject(value)) {
         value = JSON.stringify(value)
       }
       parts.push(`${encode(key)}=${encode(value)}`)

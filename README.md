@@ -4,6 +4,7 @@ implement again :)
 
 ### 目录文件
 
+```
 ├── CONTRIBUTING.md
 ├── LICENSE 
 ├── README.md
@@ -17,3 +18,4 @@ implement again :)
 ├── tools // 发布到 GitHup pages 以及 发布到 npm 的一些配置脚本工具
 ├── tsconfig.json // TypeScript 编译配置文件
 └── tslint.json // TypeScript lint 文件
+```
