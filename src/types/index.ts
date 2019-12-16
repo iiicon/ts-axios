@@ -1,3 +1,5 @@
+import { InterceptorManager } from '../core/InterceptorManager'
+
 export type Method =
   | 'get'
   | 'GET'
@@ -22,6 +24,8 @@ export interface AxiosRequestConfig {
   params?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+
+  [propName: string]: any
 }
 
 export interface AxiosResponse<T = any> {
@@ -44,6 +48,13 @@ export interface AxiosError extends Error {
 }
 
 export interface Axios {
+  defaults: any
+
+  interceptors: {
+    request: InterceptorManager<AxiosRequestConfig>
+    response: InterceptorManager<AxiosResponse>
+  }
+
   request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
 
   get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
@@ -67,6 +78,10 @@ export interface AxiosInstance extends Axios {
   <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
+export interface AxiosStatic extends AxiosInstance {
+  Axios: AxiosClassStatic
+}
+
 export interface AxiosInterceptorManager<T> {
   use(resolved: ResolvedFn<T>, rejected: RejectedFn): number
 
@@ -79,4 +94,8 @@ export interface ResolvedFn<T = any> {
 
 export interface RejectedFn {
   (error: any): any
+}
+
+export interface AxiosClassStatic {
+  new (config: AxiosRequestConfig): Axios
 }

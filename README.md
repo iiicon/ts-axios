@@ -19,3 +19,8 @@ implement again :)
 ├── tsconfig.json // TypeScript 编译配置文件
 └── tslint.json // TypeScript lint 文件
 ```
+
+### 问题
+
+- defaults 作为 Axios 的默认参数存在，为什么要写在构造函数中
+- 表驱动编程究竟哪里比ifelse强, 在本例中和 strat 结合得很好
