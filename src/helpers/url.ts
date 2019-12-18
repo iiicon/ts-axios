@@ -51,3 +51,22 @@ function encode(val: string): string {
     .replace(/%5B/gi, '[')
     .replace(/%5D/gi, ']')
 }
+
+interface URLOrigin {
+  protocol: string
+  host: string
+}
+
+const a = document.createElement('a')
+const currentURL = resolveURL(window.location.href)
+
+export function isURLOrigin(requestURL: string): boolean {
+  const parsedOrigin = resolveURL(requestURL)
+  return currentURL.protocol === parsedOrigin.protocol && currentURL.host === parsedOrigin.host
+}
+
+function resolveURL(url: string): URLOrigin {
+  a.setAttribute('href', url)
+  const { protocol, host } = a
+  return { protocol, host }
+}
