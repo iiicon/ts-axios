@@ -1,21 +1,19 @@
-import { AxiosPromise, AxiosRequestConfig, AxiosResponse } from '../types'
+import { AxiosPromise, AxiosRequestConfig } from '../types'
 import xhr from './xhr'
 import { buildURL } from '../helpers/url'
-import { transformReponse, transformRequest } from '../helpers/data'
-import { processHeaders } from '../helpers/headers'
 import flattenHeaders from '../helpers/flattenHeaders'
+import transform from './transform'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
-  console.log(config)
+  throwIfCancellationRequested(config)
   processConfig(config)
   return xhr(config).then(res => transformResponseData(res))
 }
 
 function processConfig(config: AxiosRequestConfig): void {
   config.url = transformUrl(config)
-  config.headers = transformHeaders(config)
-  config.data = transformRequestData(config)
-  config.headers = flattenHeaders(config.headers, config.method!)
+  config.data = transform(config.data, config.headers, config.transformRequest)
+  config.headers = flattenHeaders(config.headers || {}, config.method!)
 }
 
 function transformUrl(config: AxiosRequestConfig): string {
@@ -23,16 +21,13 @@ function transformUrl(config: AxiosRequestConfig): string {
   return buildURL(url!, params)
 }
 
-function transformHeaders(config: AxiosRequestConfig): any {
-  const { headers = {}, data } = config
-  return processHeaders(headers, data)
-}
-
-function transformRequestData(config: AxiosRequestConfig): any {
-  return transformRequest(config.data)
-}
-
 function transformResponseData(res: any): any {
-  res.data = transformReponse(res.data)
+  res.data = transform(res.data, res.headers, res.config.transformResponse)
   return res
+}
+
+function throwIfCancellationRequested(config: AxiosRequestConfig): void {
+  if (config.cancelToken) {
+    config.cancelToken.throwIfRequested()
+  }
 }

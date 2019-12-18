@@ -45,20 +45,48 @@
 // })
 
 
-
 import axios from '../../src/index'
 import qs from 'qs'
+import { AxiosTransformer } from '../../src/types'
+import transform from '../../src/core/transform'
 
 axios.defaults.headers.common['test2'] = 123
 
+// // @ts-ignore
+// axios({
+//   url: '/config/post',
+//   method: 'post',
+//   data: qs.stringify({
+//     a: 1
+//   }),
+//   headers: {
+//     test: '3221312311'
+//   }
+// }).then((res) => {
+//   console.log(res.data)
+// })
+
+
+// transform ---
 axios({
+  transformRequest: [(function(data) {
+    return qs.stringify(data)
+  }), ...(axios.defaults.transformRequest as AxiosTransformer[])],
+
+  transformResponse: [
+    ...(axios.defaults.transformResponse as AxiosTransformer[]),
+    (function(data) {
+      if (typeof data === 'object') {
+        data.b = 2
+      }
+
+      return data
+    })
+  ],
   url: '/config/post',
   method: 'post',
-  data: qs.stringify({
-    a: 1
-  }),
-  headers: {
-    test: '3221312311'
+  data: {
+    a: 1123123
   }
 }).then((res) => {
   console.log(res.data)

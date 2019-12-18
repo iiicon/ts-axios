@@ -7,7 +7,7 @@ axios.get('/cancel/get', {
   cancelToken: source.token
 }).catch(function(e) {
   if (axios.isCancel(e)) {
-    console.log('Request canceled', e.message)
+    // console.log('Request canceled', e.message)
   }
 })
 
@@ -24,17 +24,18 @@ setTimeout(() => {
   })
 }, 100)
 
-let cancel: Canceler
-axios.get('/cancel/get',{
-  cancelToken: new CancelToken((c)=>{
-    cancel = c
-  })
-}).catch(e => {
-  if (axios.isCancel(e)) {
-    console.log('Request canceled')
-  }
-})
-
-setTimeout(() => {
-  cancel()
-}, 500);
+// let cancel: Canceler
+// axios.get('/cancel/get', {
+//   cancelToken: new CancelToken((c) => {
+//     cancel = c
+//   })
+// }).catch(e => {
+//   if (axios.isCancel(e)) {
+//     console.log(e)
+//     console.log('Request canceled')
+//   }
+// })
+//
+// setTimeout(() => {
+//   cancel()
+// }, 500)
