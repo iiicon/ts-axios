@@ -1,3 +1,5 @@
+import { type } from 'os'
+
 const toString = Object.prototype.toString
 
 export function isDate(val: any): val is Date {
@@ -10,6 +12,10 @@ export function isObject(val: any): val is Object {
 
 export function isPlainObject(val: any): val is Object {
   return toString.call(val) === '[object Object]'
+}
+
+export function isFormData(val: any): boolean {
+  return typeof val !== 'undefined' && val instanceof FormData
 }
 
 export function extend<T, U>(to: T, from: U): T & U {
