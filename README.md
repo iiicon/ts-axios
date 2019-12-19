@@ -24,3 +24,4 @@ implement again :)
 
 - defaults 作为 Axios 的默认参数存在，为什么要写在构造函数中
 - 表驱动编程究竟哪里比ifelse强, 在本例中和 strat 结合得很好
+- 在每个阶段做的事情的思考？？？

@@ -65,6 +65,8 @@ registerCancelRoute()
 
 registerMoreRouter()
 
+registerUploadRouter()
+
 app.use(router)
 
 const port = process.env.PORT || 8888
@@ -216,6 +218,7 @@ function registerMoreRouter() {
 
   router.post('/more/post2', function(req, res) {
     const auth = req.headers.authorization
+    console.log(auth)
     const [type, credentials] = auth.split(' ')
     const [username, password] = atob(credentials).split(':')
 
@@ -233,5 +236,12 @@ function registerMoreRouter() {
 
   router.get('/more/B', function(req, res) {
     res.end('b')
+  })
+}
+
+function registerUploadRouter() {
+  router.post('/upload-download/upload', function (req, res) {
+    console.log(req.body, req.files)
+    res.end('upload success!')
   })
 }

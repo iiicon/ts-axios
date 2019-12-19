@@ -19,7 +19,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       xsrfHeaderName,
       xsrfCookieName,
       onDownloadProgress,
-      onUploadProgress
+      onUploadProgress,
+      auth,
+      validateStatus
     } = config
 
     const request = new XMLHttpRequest()
@@ -72,6 +74,10 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         delete headers['Content-Type']
       }
 
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
+      }
+
       if ((withCredentials || isURLOrigin(url!)) && xsrfCookieName) {
         const value = cookie.read(xsrfCookieName)
         if (value) {
@@ -89,7 +95,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     function handleResponse(response: AxiosResponse) {
-      if (response.status >= 200 && response.status < 300) {
+      if (!validateStatus || validateStatus(response.status)) {
         resolve(response)
       } else {
         reject(
