@@ -102,7 +102,7 @@
     "jasmine-ajax": "~4.0.0",
     "jasmine-core": "~3.4.0",
     "jest": "^24.9.0",
-    "jest-config": "^23.6.0",
+    "jest-config": "^29.3.1",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
     "prettier": "^1.14.3",
